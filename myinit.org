@@ -45,7 +45,7 @@
   ;; high-light the current line:
   (global-hl-line-mode t)
 
-  ;; try this out. From Ivan Malison's config file. 
+  ;; try this out. From Ivan Malison's config file.
   (bind-key "C-x C-i" 'imenu)
 
   ;; a compliment to C-k
@@ -157,9 +157,9 @@ From http://www.xsteve.at/prg/emacs/.emacs.txt
 * Now and Today
 
 
-A couple of date and time functions.  
+A couple of date and time functions.
 
-~C-c D~ inserts: 
+~C-c D~ inserts:
 
 ~==========
 Mon Mar 04 2019 07:34:10 EST
@@ -280,7 +280,7 @@ http://xahlee.blogspot.com/2010/05/emacs-unfill-paragraph-unfill-region.html
 
 
 #+BEGIN_SRC emacs-lisp
- 
+
 (defun compact-uncompact-block ()
   (interactive)
   ;; This command symbol has a property "stateIsCompact-p", the
@@ -378,7 +378,7 @@ Usage:
 
 * Recent Files
 
-Keep a list of the 50 most recently used files.  
+Keep a list of the 50 most recently used files.
 
 From http://www.joegrossberg.com/archives/000182.html.
 
@@ -646,6 +646,18 @@ C-- to reduce selected region
 
 
 
+* Ag - Silver Searcher
+
+#+BEGIN_SRC emacs-lisp
+
+(use-package ag
+:ensure t
+)
+
+#+END_SRC
+
+#+RESULTS:
+
 * Counsel
 
 #+BEGIN_SRC emacs-lisp
@@ -888,11 +900,11 @@ location. Cool.
    ;; 10. Git
 
   (use-package magit
-    ;;:ensure t
-    :defer t
-    :config
+    :ensure t
+    :bind ("C-c C-g" . magit-status)
+    ;;:config
     ;; use Ctrl-C G to start Git:
-    (global-set-key "\C-c\C-g" 'magit-status)
+    ;;(global-set-key "\C-c\C-g" 'magit-status)
     )
 
 
@@ -900,7 +912,7 @@ location. Cool.
 #+END_SRC
 
 #+RESULTS:
-: t
+: magit-status
 
 
 * Flycheck
@@ -933,48 +945,60 @@ location. Cool.
 * Python
 
 
+elpy use-package configuration was taken from here:
+[[https://emacs.stackexchange.com/questions/10065/]]
+and [[https://github.com/anschwa/emacs.d]]
+
+
 #+BEGIN_SRC emacs-lisp
 
   (use-package elpy
     ;; :ensure t
-    :defer
+
+    :init (with-eval-after-load 'python (elpy-enable))
+    :commands elpy-enable
+
     :config
-    ;; use Ctrl-C G to start Git:
-    (package-initialize)
-    (elpy-enable)
 
-    ;;(setq-default elpy-syntax-check-command 'pylint)
-    (setq python-check-command 'pylint)
-    (defalias 'workon 'venv-workon)
-    (defalias 'deactivate 'venv-deactivate)
+    ;; Use Flycheck instead of Flymake
+    (when (require 'flycheck nil t)
+      (remove-hook 'elpy-modules 'elpy-module-flymake)
+      (add-hook 'elpy-mode-hook 'flycheck-mode))
+    ;; jedi is great
+    (setq elpy-rpc-backend "jedi")
 
-    ;; the global function doesn's seem to work. Adding it here for elpy-mode
-    (add-hook 'elpy-mode-hook
-    (lambda ()
-    (add-hook 'before-save-hook 'delete-trailing-whitespace nil t)))
 
-    (setq-default whitespace-line-column 80)
-    (setq-default whitespace-style '(face lines-tail))
-    (whitespace-mode 0)
-    (defun my-toggle-longline-indicator ()
-      "Highlights chars over 80 columns"
-      (interactive)
-      (if (eq whitespace-mode t)
-          (whitespace-mode 0)
-        (whitespace-mode t)))
+  ;;(setq-default elpy-syntax-check-command 'pylint)
+  (setq python-check-command "pylint")
 
-    (add-hook 'python-mode-hook 'whitespace-mode)
 
-   )
+  ;; the global function doesn's seem to work. Adding it here for elpy-mode
+  (add-hook 'elpy-mode-hook
+            (lambda ()
+              (add-hook 'before-save-hook 'delete-trailing-whitespace nil t)))
 
-   ;; mark these as safe regardles of their value so we are not
-   ;; constantly prompted each time we open a file with a dir-locals
-   ;; from: https://emacs.stackexchange.com/questions/21575
-  (defcustom flycheck-python-pylint-executable
-    :safe (lambda (x) t))
+  (setq-default whitespace-line-column 80)
+  (setq-default whitespace-style '(face lines-tail))
+  (whitespace-mode 0)
+  (defun my-toggle-longline-indicator ()
+    "Highlights chars over 80 columns"
+    (interactive)
+    (if (eq whitespace-mode t)
+        (whitespace-mode 0)
+      (whitespace-mode t)))
 
-  (defcustom pytest-global-name
-    :safe (lambda (x) t))
+  (add-hook 'python-mode-hook 'whitespace-mode)
+
+  )
+
+    ;; mark these as safe regardles of their value so we are not
+    ;; constantly prompted each time we open a file with a dir-locals
+    ;; from: https://emacs.stackexchange.com/questions/21575
+   (defcustom flycheck-python-pylint-executable
+     :safe (lambda (x) t))
+
+   (defcustom pytest-global-name
+     :safe (lambda (x) t))
 
 
 #+END_SRC
@@ -994,16 +1018,30 @@ available on melpa this morning:
 
 #+BEGIN_SRC emacs-lisp
 
-      (add-to-list 'load-path "~/.emacs.d/lisp/")
-      (require 'virtualenvwrapper)
-      (venv-initialize-interactive-shells) ;; interactive shell support
-      ;; eshell support
-      (venv-initialize-eshell)
+  ;; (add-to-list 'load-path "~/.emacs.d/lisp/")
+  ;; (require 'virtualenvwrapper)
+  ;; (venv-initialize-interactive-shells) ;; interactive shell support
+  ;; ;; eshell support
+  ;; (venv-initialize-eshell)
+
+  (use-package virtualenvwrapper
+    :ensure t
+    :config
+    ;; interactive shell support
+    (venv-initialize-interactive-shells)
+    ;; eshell support
+    (venv-initialize-eshell)
+
+    (defalias 'workon 'venv-workon)
+    (defalias 'deactivate 'venv-deactivate)
+
+    )
+
 
 #+END_SRC
 
 #+RESULTS:
-: Eshell virtualenv support initialized.
+: t
 
 
 * Javascript

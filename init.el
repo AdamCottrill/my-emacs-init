@@ -15,6 +15,12 @@
 
 (setq use-package-verbose t)
 
+
+;; TODO: Load settings from settings.el
+;; (setq custom-file "~/.emacs.d/settings.el")
+;; (load-file "~/.emacs.d/settings.el")
+
+
 ;; this is where my org files will go. Different on different
 ;; computers, keeps computer specific setting out of my-init.org
 (defvar  my-org-dir "~/Dropbox/orgfiles")
@@ -60,7 +66,7 @@
  '(org-directory "~/Dropbox/orgfiles")
  '(package-selected-packages
    (quote
-    (beacon ac-js2 smartparens poly-R ess-jags-d ess-smart-underscore markdown-mode dumb-jump counsel-projectile projectile virtualenvwrapper expand-region pytest htmlize ox-reveal zenburn-theme which-key web-mode use-package typescript-mode try tern-auto-complete soft-charcoal-theme magit js3-mode js2-refactor js-comint highlight-parentheses flycheck eval-in-repl ess emmet-mode elpy counsel company-tern auto-org-md)))
+    (ag beacon ac-js2 smartparens poly-R ess-jags-d ess-smart-underscore markdown-mode dumb-jump counsel-projectile projectile virtualenvwrapper expand-region pytest htmlize ox-reveal zenburn-theme which-key web-mode use-package typescript-mode try tern-auto-complete soft-charcoal-theme magit js3-mode js2-refactor js-comint highlight-parentheses flycheck eval-in-repl ess emmet-mode elpy counsel company-tern auto-org-md)))
  '(pdf-view-midnight-colors (quote ("#DCDCCC" . "#383838")))
  '(safe-local-variable-values
    (quote
