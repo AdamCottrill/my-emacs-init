@@ -38,7 +38,7 @@
                 ("\\.pdf\\'" . "Sumatra %s")  ;;linux
                 ) org-file-apps ))
 
-(org-babel-load-file (expand-file-name "~/.emacs.d/myinit.org"))
+(org-babel-load-file (expand-file-name "~/.emacs.d/ReadMe.org"))
 
 ;; end of my config.
 ;;===================================================
