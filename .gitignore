@@ -1,6 +1,8 @@
 *~
 *.elc
 .python-environments/*
+secrets.*
+ReadMe.el
 abbrev_defs
 ac-comphist.dat
 bookmarks
