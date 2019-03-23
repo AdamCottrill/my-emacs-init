@@ -263,6 +263,7 @@ Highlight the cursor position on demand and when we enter a buffer.
 
     (add-hook 'admb-mode-hook 'hpm-on)
     (add-hook 'ess-mode-hook 'hpm-on)
+    (add-hook 'js2-mode-hook 'hpm-on)
     (add-hook 'python-mode-hook 'hpm-on)
     (add-hook 'latex-mode-hook 'hpm-on)
     (add-hook 'LaTeX-mode-hook 'hpm-on)
@@ -271,6 +272,9 @@ Highlight the cursor position on demand and when we enter a buffer.
     )
 
 #+END_SRC
+
+#+RESULTS:
+: t
 
 
 * Compact-Uncompact Block
@@ -567,6 +571,61 @@ C-- to reduce selected region
 #+RESULTS:
 : t
 
+
+* WS-Butler
+
+A mode that will remove extraneous/trailing whitespace from lines that
+you have edited.
+
+#+BEGIN_SRC emacs-lisp
+
+(use-package ws-butler 
+:config (ws-butler-global-mode t)
+)
+
+#+END_SRC
+
+#+RESULTS:
+: t
+
+
+* iedit
+
+A simple, multi-cursor like package.  Narrow to region of interest
+(C-x n n), mark region or word to change and type C-; many any desired
+changes and all instance of the marked region will also change. C-; to
+quick. C-x n w to re-widen back to original buffer.
+
+These notes were compile from a comment by GLucas on Mike Zamansky's
+blog:
+
++ with a 0 prefix (C-0 C-;) iedit will only select matches in the
+  current function -- no need to narrow first. 
+
++ With a 1 prefix (C-1 C-;) iedit will select matches just in the
+  current line and then you can incrementally add matches up or down
+  using M-n/M-p.
+
++ There are also bindings for jumping around between occurrences,
+  numbering occurrences, hiding everything except the occurrences and a
+  couple lines of context, and more.
+
++ if you switch buffers you can use iedit with a double prefix (C-u
+  C-u C-;) to find occurrences in the new buffer of whatever was last
+  matched in the old buffer.
+
+
+#+BEGIN_SRC emacs-lisp
+
+(use-package iedit
+:ensure t
+)
+
+#+END_SRC
+
+#+RESULTS:
+
+
 * IDO and iBuffer
 
 + ibuffer groups from Mike Zimansky's blog post and video here:
@@ -658,15 +717,42 @@ C-- to reduce selected region
 
 #+RESULTS:
 
+
+* Ivy
+
+See [[https://github.com/abo-abo/swiper]]. The documenation for Ivy can be
+found here: [[https://oremacs.com/swiper/]]
+
+the default key binding for "C-x b" will switch to another buffer in the
+same window. This key binding ("C-x B") provides a nice complement - opens
+another buffer in the other window.
+
+#+BEGIN_SRC emacs-lisp
+
+  ;;Ivy
+  (use-package ivy
+    ;; :ensure t
+    :bind (("C-x B" . ivy-switch-buffer-other-window))
+    )
+
+
+#+END_SRC
+
+#+RESULTS:
+
 * Counsel
 
 #+BEGIN_SRC emacs-lisp
 
-(use-package counsel
-  :bind
-  (("M-y" . counsel-yank-pop)
-   :map ivy-minibuffer-map
-   ("M-y" . ivy-next-line)))
+  (use-package counsel
+    :after ivy
+    :bind
+    (("M-y" . counsel-yank-pop)     
+     :map ivy-minibuffer-map
+     ("M-y" . ivy-next-line))
+    :config
+    (counsel-mode)
+    )
 
 #+END_SRC
 
@@ -675,49 +761,56 @@ C-- to reduce selected region
 
 * Swiper
 
+See: [[https://github.com/abo-abo/swiper]]
+
+** Notes
++ after using swiper to search a buffer, you can use ~M-q~ to
+  interactively search and replace 
+
 #+BEGIN_SRC emacs-lisp
 
-;;Counsel
-(use-package ivy
-  ;; :ensure t
-  )
 
+  ;;Swiper
+  (use-package swiper
+    ;; :ensure t
+    :after ivy
+    :bind (("C-s" . swiper)
+           ("C-r" . swiper)
+           )
+    :config
+    (progn
+      (ivy-mode 1)
+      (setq ivy-use-virtual-buffers t)
+      (setq enable-recursive-minibuffers t)
+      ;;(global-set-key "\C-s" 'swiper)
+      (global-set-key (kbd "C-c C-r") 'ivy-resume)
+      (global-set-key (kbd "<f6>") 'ivy-resume)
+      (global-set-key (kbd "M-x") 'counsel-M-x)
+      (global-set-key (kbd "C-x C-f") 'counsel-find-file)
+      (global-set-key (kbd "<f1> f") 'counsel-describe-function)
+      (global-set-key (kbd "<f1> v") 'counsel-describe-variable)
+      (global-set-key (kbd "<f1> l") 'counsel-find-library)
+      (global-set-key (kbd "<f2> i") 'counsel-info-lookup-symbol)
+      (global-set-key (kbd "<f2> u") 'counsel-unicode-char)
+      (global-set-key (kbd "C-c g") 'counsel-git)
+      (global-set-key (kbd "C-c j") 'counsel-git-grep)
+      (global-set-key (kbd "C-c k") 'counsel-ag)
+      (global-set-key (kbd "C-x l") 'counsel-locate)
+      (global-set-key (kbd "C-S-o") 'counsel-rhythmbox)
+      (define-key minibuffer-local-map (kbd "C-R") 'counsel-minibuffer-history)       )
 
-;;Counsel
-(use-package counsel
-  ;; :ensure t
-  )
+    ;; allow fuzzy matching. Use space as greedy wild-card. 
+    ;; (Note - this must come after swiper is loaded.)
+    (setq ivy-re-builders-alist '((swiper . ivy--regex-plus)
+                                  (t . ivy--regex-fuzzy)))
 
-;;Swiper
-(use-package swiper
-  ;; :ensure t
-  :config
-  (progn
-    (ivy-mode 1)
-    (setq ivy-use-virtual-buffers t)
-    (setq enable-recursive-minibuffers t)
-    (global-set-key "\C-s" 'swiper)
-    (global-set-key (kbd "C-c C-r") 'ivy-resume)
-    (global-set-key (kbd "<f6>") 'ivy-resume)
-    (global-set-key (kbd "M-x") 'counsel-M-x)
-    (global-set-key (kbd "C-x C-f") 'counsel-find-file)
-    (global-set-key (kbd "<f1> f") 'counsel-describe-function)
-    (global-set-key (kbd "<f1> v") 'counsel-describe-variable)
-    (global-set-key (kbd "<f1> l") 'counsel-find-library)
-    (global-set-key (kbd "<f2> i") 'counsel-info-lookup-symbol)
-    (global-set-key (kbd "<f2> u") 'counsel-unicode-char)
-    (global-set-key (kbd "C-c g") 'counsel-git)
-    (global-set-key (kbd "C-c j") 'counsel-git-grep)
-    (global-set-key (kbd "C-c k") 'counsel-ag)
-    (global-set-key (kbd "C-x l") 'counsel-locate)
-    (global-set-key (kbd "C-S-o") 'counsel-rhythmbox)
-    (define-key minibuffer-local-map (kbd "C-r") 'counsel-minibuffer-history)       ))
+    )
 
 
 #+END_SRC
 
 #+RESULTS:
-: t
+: ivy-yank-word
 
 * Auto-complete
 
@@ -765,7 +858,7 @@ modified from:[[https://github.com/zamansky/using-emacs/blob/master/myinit.org]]
       ;; (use-package smartparens-ess)
       ;; (use-package smartparens-markdown)
       ;; (use-package smartparens-org)
-      ;;(use-package smartparens-javascript)
+      (use-package smartparens-javascript)
 
       (smartparens-global-mode t)
       (show-smartparens-global-mode t)
@@ -841,20 +934,23 @@ From: [[https://cestlaz.github.io/posts/using-emacs-33-projectile-jump/]]
   ;; projectile
   (use-package projectile
     ;; :ensure t
+    :bind ("C-c p" . projectile-command-map)
     :config
     (projectile-global-mode)
 
-    (define-key projectile-mode-map (kbd "C-c p") 'projectile-command-map)
+    ;;(define-key projectile-mode-map (kbd "C-c p") 'projectile-command-map)
+
     (projectile-mode +1)
 
     (setq projectile-sort-order 'recentf)
     (setq projectile-switch-project-action #'projectile-dired)
-    (setq projectile-completion-system 'ivy))
+    (setq projectile-completion-system 'ivy)
+    )
 
-    (use-package counsel-projectile
-      ;; :ensure t
-      :config
-      (counsel-projectile-mode))
+  (use-package counsel-projectile
+    ;; :ensure t
+    :config
+    (counsel-projectile-mode))
 
 
 #+END_SRC
@@ -950,6 +1046,11 @@ elpy use-package configuration was taken from here:
 and [[https://github.com/anschwa/emacs.d]]
 
 
+
+
+
+** elpy
+
 #+BEGIN_SRC emacs-lisp
 
   (use-package elpy
@@ -1035,6 +1136,11 @@ available on melpa this morning:
     (defalias 'workon 'venv-workon)
     (defalias 'deactivate 'venv-deactivate)
 
+    ;; from https://github.com/porterjamesj/virtualenvwrapper.el
+    ;; add (".venv" . "<your-venv-name>") to the .dir-locals
+    (setq projectile-switch-project-action 'venv-projectile-auto-workon)
+    (setq-default mode-line-format (cons '(:exec venv-current-name) mode-line-format))
+
     )
 
 
@@ -1048,160 +1154,79 @@ available on melpa this morning:
 
 #+BEGIN_SRC emacs-lisp
 
-;;================
-;; Javascript
+      ;;================
+      ;; Javascript
 
-  (use-package ac-js2
-  ;; :ensure t
-  :defer t
-  :config
-  (add-hook 'js2-mode-hook 'ac-js2-mode)
+    (use-package js2-mode
+      :commands js2-mode
+      :init
+      (progn
+        (add-to-list 'auto-mode-alist '("\\.js$" . js2-mode))
+        (setq-default js2-basic-offset 2)
+        (add-to-list 'interpreter-mode-alist (cons "node" 'js2-mode)))
+      :config
+      (progn
+        (js2-imenu-extras-setup)
+        (bind-key "C-x C-e" 'js-send-last-sexp js2-mode-map)
+        (bind-key "C-M-x" 'js-send-last-sexp-and-go js2-mode-map)
+        (bind-key "C-c b" 'js-send-buffer js2-mode-map)
+        (bind-key "C-c d" 'my/insert-or-flush-debug js2-mode-map)
+        (bind-key "C-c C-b" 'js-send-buffer-and-go js2-mode-map)
+        (bind-key "C-c w" 'my/copy-javascript-region-or-buffer js2-mode-map))
+
+
+        ;; from https://emacs.cafe/emacs/javascript/setup/2017/05/09/emacs-setup-javascript-2.html
+        (require 'company)
+        (require 'company-tern)
+
+        (add-to-list 'company-backends 'company-tern)
+        (add-hook 'js2-mode-hook (lambda ()
+                                 (tern-mode)
+                                 (company-mode)))
+
+
   )
 
 
 
-(add-to-list 'auto-mode-alist '("\\.js\\'" . js2-mode))
-;;(add-hook 'js-mode-hook 'js2-minor-mode)
+
+      (require 'js2-refactor)
+      ;;(require 'xref-js2)
+
+      (add-hook 'js2-mode-hook #'js2-refactor-mode)
+      (js2r-add-keybindings-with-prefix "C-c C-r")
+      (define-key js2-mode-map (kbd "C-k") #'js2r-kill)
+
+      ;; js-mode (which js2 is based on) binds "M-." which conflicts with xref, so
+      ;; unbind it.
+      (define-key js-mode-map (kbd "M-.") nil)
 
 
-(add-hook 'js2-mode-hook (lambda () (setq js2-basic-offset 2)))
+      ;; Tide - Typescript mode
 
-;; Better imenu
-(add-hook 'js2-mode-hook #'js2-imenu-extras-mode)
-
-(add-to-list 'auto-mode-alist '("\\.json$" . js-mode))
-
-;;;; use moz-repl to work interactively with mozilla browser
-;;(autoload 'moz-minor-mode
-;;  "moz"
-;;  "Mozilla Minor and Inferior Mozilla Modes" t)
-;;(add-hook 'js2-mode-hook 'js2-custom-setup)
-;;(defun js2-custom-setup ()
-;;  (moz-minor-mode 1))
-
-;;(custom-set-variables
-  ;; Your init file should contain only one such instance.
-  ;; If there is more than one, they won't work right.
-;; '(js3-indent-dots t))
-
-(require 'eval-in-repl)
-;;; Javascript support
-;; (require 'js3-mode)  ; if not done elsewhere
-(require 'js2-mode)  ; if not done elsewhere
-(require 'js-comint) ; if not done elsewhere
-;;(with-eval-after-load 'js3-mode
-;;  (require 'eval-in-repl-javascript)
-;;  (define-key js3-mode-map (kbd "<C-return>") 'eir-eval-in-javascript))
-(with-eval-after-load 'js2-mode
-  (require 'eval-in-repl-javascript)
-  (define-key js2-mode-map (kbd "<C-return>") 'eir-eval-in-javascript))
-
-(setq inferior-js-program-command "node")
+      (require 'typescript-mode)
+      (add-to-list 'auto-mode-alist '("\\.ts\\'" . typescript-mode))
 
 
-;;(require 'json)
+      (defun setup-tide-mode ()
+        (interactive)
+        (tide-setup)
+        (flycheck-mode +1)
+        (setq flycheck-check-syntax-automatically '(save mode-enabled))
+        (eldoc-mode +1)
+        (tide-hl-identifier-mode +1)
+        ;; company is an optional dependency. You have to
+        ;; install it separately via package-install
+        ;; `M-x package-install [ret] company`
+        (company-mode +1))
 
-(use-package json)
+      ;; aligns annotation to the right hand side
+      (setq company-tooltip-align-annotations t)
 
+      ;; formats the buffer before saving
+      (add-hook 'before-save-hook 'tide-format-before-save)
 
-(add-hook 'after-init-hook #'global-flycheck-mode)
-
-(defun my-parse-jslinter-warning (warning)
-  (flycheck-error-new
-   :line (1+ (cdr (assoc 'line warning)))
-   :column (1+ (cdr (assoc 'column warning)))
-   :message (cdr (assoc 'message warning))
-   :level 'error
-   :buffer (current-buffer)
-   :checker 'javascript-eslint
-   ;;:checker 'javascript-jslinter
-   ))
-(defun jslinter-error-parser (output checker buffer)
-  (mapcar 'parse-jslinter-warning
-          (cdr (assoc 'warnings (aref (json-read-from-string output) 0)))))
-(flycheck-define-checker javascript-jslinter
-  "A JavaScript syntax and style checker based on JSLinter.
-
-See URL `https://github.com/tensor5/JSLinter'."
-  :command ("/usr/local/bin/jslint" "--raw" source)
-  :error-parser jslinter-error-parser
-  :modes (js-mode js2-mode))
-  ;;:modes (js-mode js2-mode js3-mode))
-
-;; from https://stackoverflow.com/questions/48733723
-(defun js2-mode-use-eslint-indent ()
-  (let ((json-object-type 'hash-table)
-    (json-config (shell-command-to-string (format  "eslint --print-config %s"
-                               (shell-quote-argument
-                            (buffer-file-name))))))
-    (ignore-errors
-      (setq js-indent-level
-        (aref (gethash "indent" (gethash  "rules" (json-read-from-string json-config))) 1)))))
-
-(add-hook 'js2-mode-hook #'js2-mode-use-eslint-indent)
-
-
-
-(eval-after-load 'tern
-   '(progn
-      (require 'tern-auto-complete)
-      (tern-ac-setup)))
-(add-hook 'js2-mode-hook 'tern-ac-setup)
-
-(require 'js2-refactor)
-;;(require 'xref-js2)
-
-(add-hook 'js2-mode-hook #'js2-refactor-mode)
-(js2r-add-keybindings-with-prefix "C-c C-r")
-(define-key js2-mode-map (kbd "C-k") #'js2r-kill)
-
-;; js-mode (which js2 is based on) binds "M-." which conflicts with xref, so
-;; unbind it.
-(define-key js-mode-map (kbd "M-.") nil)
-
-;;(add-hook 'js2-mode-hook (lambda ()
-;;  (add-hook 'xref-backend-functions #'xref-js2-xref-backend nil t)))
-
-
-(require 'company)
-(require 'company-tern)
-
-(add-to-list 'company-backends 'company-tern)
-(add-hook 'js2-mode-hook (lambda ()
-                             (tern-mode)
-                             (company-mode)))
-
-;; Disable completion keybindings, as we use xref-js2 instead
-;;(define-key tern-mode-keymap (kbd "M-.") nil)
-;;(define-key tern-mode-keymap (kbd "M-,") nil)
-
-
-
-;; Tide - Typescript mode
-
-(require 'typescript-mode)
-(add-to-list 'auto-mode-alist '("\\.ts\\'" . typescript-mode))
-
-
-(defun setup-tide-mode ()
-  (interactive)
-  (tide-setup)
-  (flycheck-mode +1)
-  (setq flycheck-check-syntax-automatically '(save mode-enabled))
-  (eldoc-mode +1)
-  (tide-hl-identifier-mode +1)
-  ;; company is an optional dependency. You have to
-  ;; install it separately via package-install
-  ;; `M-x package-install [ret] company`
-  (company-mode +1))
-
-;; aligns annotation to the right hand side
-(setq company-tooltip-align-annotations t)
-
-;; formats the buffer before saving
-(add-hook 'before-save-hook 'tide-format-before-save)
-
-(add-hook 'typescript-mode-hook #'setup-tide-mode)
+      (add-hook 'typescript-mode-hook #'setup-tide-mode)
 
 
 
@@ -1211,7 +1236,8 @@ See URL `https://github.com/tensor5/JSLinter'."
 #+RESULTS:
 | setup-tide-mode |
 
-
+	
+	
 * HTML and Web-mode
 
 Web-mode configuration modified using suggestions found here:
@@ -1239,6 +1265,8 @@ Web-mode configuration modified using suggestions found here:
           '(("css" . (ac-source-css-property))
             ("html" . (ac-source-words-in-buffer ac-source-abbrev))))
 
+    ;; autopairing conflict with smart parens => {{ }}}
+    (setq web-mode-enable-auto-pairing nil)
     (setq web-mode-enable-auto-closing t)
     (setq web-mode-enable-auto-quoting t)
     (setq web-mode-enable-current-element-highlight t)
