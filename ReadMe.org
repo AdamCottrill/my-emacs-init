@@ -5,7 +5,7 @@
 
 * Code Block Basics
 ~C-c C-c~ - to run
-~C-c '~ to edit
+~C-c '~ - to edit
 
 * Basic Set-up and General Preferences
 
@@ -112,11 +112,19 @@
   ;;==============================================================================
   ;; from http://www.stokebloke.com/wordpress/2008/04/17/emacs-refresh-f5-key/
   ;; use f5 to refresh file in current buffer
-  (defun refresh-file ()
-    (interactive)
-    (revert-buffer t t t)
-    )
-  (global-set-key [f5] 'refresh-file)
+;;  (defun refresh-file ()
+;;    (interactive)
+;;    (revert-buffer t t t)
+;;    )
+;;  (global-set-key <f5> 'refresh-file)
+
+
+
+
+ (defun revert-buffer-no-confirm ()
+    "Revert buffer without confirmation."
+    (interactive) (revert-buffer t t))
+(global-set-key (kbd "<f5>") 'revert-buffer-no-confirm)
 
 
 #+END_SRC
@@ -576,7 +584,7 @@ you have edited.
 
 #+BEGIN_SRC emacs-lisp
 
-(use-package ws-butler 
+(use-package ws-butler
 :config (ws-butler-global-mode t)
 )
 
@@ -588,27 +596,32 @@ you have edited.
 
 * iedit
 
-A simple, multi-cursor like package.  Narrow to region of interest
-(C-x n n), mark region or word to change and type C-; many any desired
-changes and all instance of the marked region will also change. C-; to
-quick. C-x n w to re-widen back to original buffer.
+A simple, multi-cursor like package. Example useage:
+
++ ~C-x n n~ to narrow to region of interest
++ mark region or word to change and type ~C-;~ activate iedit mode
++ make any desired changes and all instance of the marked region will
+  also change.
++ ~C-;~ to quite iedit mode.
++ ~C-x n w~ to re-widen back to original buffer.
+
 
 These notes were compile from a comment by GLucas on Mike Zamansky's
 blog:
 
-+ with a 0 prefix (C-0 C-;) iedit will only select matches in the
-  current function -- no need to narrow first. 
++ with a 0 prefix (~C-0 C-;~) iedit will only select matches in the
+  current function -- no need to narrow first.
 
-+ With a 1 prefix (C-1 C-;) iedit will select matches just in the
++ With a 1 prefix (~C-1 C-;~) iedit will select matches just in the
   current line and then you can incrementally add matches up or down
-  using M-n/M-p.
+  using ~M-n~ or ~M-p~.
 
 + There are also bindings for jumping around between occurrences,
   numbering occurrences, hiding everything except the occurrences and a
   couple lines of context, and more.
 
-+ if you switch buffers you can use iedit with a double prefix (C-u
-  C-u C-;) to find occurrences in the new buffer of whatever was last
++ if you switch buffers you can use iedit with a double prefix (~C-u
+  C-u C-;~) to find occurrences in the new buffer of whatever was last
   matched in the old buffer.
 
 
@@ -622,6 +635,8 @@ blog:
 
 #+RESULTS:
 
+KedtiJjwmK5*0mat
+KedtiJjwmK5*0mat
 
 * IDO and iBuffer
 
@@ -653,6 +668,7 @@ blog:
                  ("programming" (or
                                  (mode . python-mode)
                                  (mode . elpy-mode)
+                                 (mode . typescript-mode)
                                  (mode . ess-mode)
                                  (mode . c++-mode)))
                  ("emacs" (or
@@ -702,6 +718,22 @@ blog:
 
 
 
+
+* Unfill
+
+#+BEGIN_SRC emacs-lisp
+
+(use-package unfill
+
+)
+
+#+END_SRC
+
+#+RESULTS:
+
+
+
+
 * Ag - Silver Searcher
 
 #+BEGIN_SRC emacs-lisp
@@ -726,11 +758,11 @@ another buffer in the other window.
 
 #+BEGIN_SRC emacs-lisp
 
-  ;;Ivy
-  (use-package ivy
-    ;; :ensure t
-    :bind (("C-x B" . ivy-switch-buffer-other-window))
-    )
+  ;; ;;Ivy
+  ;; (use-package ivy
+  ;;   ;; :ensure t
+  ;;   :bind (("C-x B" . ivy-switch-buffer-other-window))
+  ;;   )
 
 
 #+END_SRC
@@ -741,15 +773,15 @@ another buffer in the other window.
 
 #+BEGIN_SRC emacs-lisp
 
-  (use-package counsel
-    :after ivy
-    :bind
-    (("M-y" . counsel-yank-pop)     
-     :map ivy-minibuffer-map
-     ("M-y" . ivy-next-line))
-    :config
-    (counsel-mode)
-    )
+  ;; (use-package counsel
+  ;;   :after ivy
+  ;;   :bind
+  ;;   (("M-y" . counsel-yank-pop)
+  ;;    :map ivy-minibuffer-map
+  ;;    ("M-y" . ivy-next-line))
+  ;;   :config
+  ;;   (counsel-mode)
+  ;;   )
 
 #+END_SRC
 
@@ -762,46 +794,46 @@ See: [[https://github.com/abo-abo/swiper]]
 
 ** Notes
 + after using swiper to search a buffer, you can use ~M-q~ to
-  interactively search and replace 
+  interactively search and replace
 
 #+BEGIN_SRC emacs-lisp
 
 
-  ;;Swiper
-  (use-package swiper
-    ;; :ensure t
-    :after ivy
-    :bind (("C-s" . swiper)
-           ("C-r" . swiper)
-           )
-    :config
-    (progn
-      (ivy-mode 1)
-      (setq ivy-use-virtual-buffers t)
-      (setq enable-recursive-minibuffers t)
-      ;;(global-set-key "\C-s" 'swiper)
-      (global-set-key (kbd "C-c C-r") 'ivy-resume)
-      (global-set-key (kbd "<f6>") 'ivy-resume)
-      (global-set-key (kbd "M-x") 'counsel-M-x)
-      (global-set-key (kbd "C-x C-f") 'counsel-find-file)
-      (global-set-key (kbd "<f1> f") 'counsel-describe-function)
-      (global-set-key (kbd "<f1> v") 'counsel-describe-variable)
-      (global-set-key (kbd "<f1> l") 'counsel-find-library)
-      (global-set-key (kbd "<f2> i") 'counsel-info-lookup-symbol)
-      (global-set-key (kbd "<f2> u") 'counsel-unicode-char)
-      (global-set-key (kbd "C-c g") 'counsel-git)
-      (global-set-key (kbd "C-c j") 'counsel-git-grep)
-      (global-set-key (kbd "C-c k") 'counsel-ag)
-      (global-set-key (kbd "C-x l") 'counsel-locate)
-      (global-set-key (kbd "C-S-o") 'counsel-rhythmbox)
-      (define-key minibuffer-local-map (kbd "C-R") 'counsel-minibuffer-history)       )
+  ;; ;;Swiper
+  ;; (use-package swiper
+  ;;   ;; :ensure t
+  ;;   :after ivy
+  ;;   :bind (("C-s" . swiper)
+  ;;          ("C-r" . swiper)
+  ;;          )
+  ;;   :config
+  ;;   (progn
+  ;;     (ivy-mode 1)
+  ;;     (setq ivy-use-virtual-buffers t)
+  ;;     (setq enable-recursive-minibuffers t)
+  ;;     ;;(global-set-key "\C-s" 'swiper)
+  ;;     (global-set-key (kbd "C-c C-r") 'ivy-resume)
+  ;;     (global-set-key (kbd "<f6>") 'ivy-resume)
+  ;;     (global-set-key (kbd "M-x") 'counsel-M-x)
+  ;;     (global-set-key (kbd "C-x C-f") 'counsel-find-file)
+  ;;     (global-set-key (kbd "<f1> f") 'counsel-describe-function)
+  ;;     (global-set-key (kbd "<f1> v") 'counsel-describe-variable)
+  ;;     (global-set-key (kbd "<f1> l") 'counsel-find-library)
+  ;;     (global-set-key (kbd "<f2> i") 'counsel-info-lookup-symbol)
+  ;;     (global-set-key (kbd "<f2> u") 'counsel-unicode-char)
+  ;;     (global-set-key (kbd "C-c g") 'counsel-git)
+  ;;     (global-set-key (kbd "C-c j") 'counsel-git-grep)
+  ;;     (global-set-key (kbd "C-c k") 'counsel-ag)
+  ;;     (global-set-key (kbd "C-x l") 'counsel-locate)
+  ;;     (global-set-key (kbd "C-S-o") 'counsel-rhythmbox)
+  ;;     (define-key minibuffer-local-map (kbd "C-R") 'counsel-minibuffer-history)       )
 
-    ;; allow fuzzy matching. Use space as greedy wild-card. 
-    ;; (Note - this must come after swiper is loaded.)
-    (setq ivy-re-builders-alist '((swiper . ivy--regex-plus)
-                                  (t . ivy--regex-fuzzy)))
+  ;;   ;; allow fuzzy matching. Use space as greedy wild-card.
+  ;;   ;; (Note - this must come after swiper is loaded.)
+  ;;   (setq ivy-re-builders-alist '((swiper . ivy--regex-plus)
+  ;;                                 (t . ivy--regex-fuzzy)))
 
-    )
+  ;;   )
 
 
 #+END_SRC
@@ -1035,6 +1067,32 @@ location. Cool.
 #+RESULTS:
 : t
 
+
+* Company Mode
+
+From:
+
+Explicitly configuring company help with performance of elpy -
+especially on my windows machine.
+
+#+BEGIN_SRC emacs-lisp
+
+(use-package company
+  :defer 2
+  :diminish
+  :custom
+  (company-begin-commands '(self-insert-command))
+  (company-idle-delay .1)
+  (company-minimum-prefix-length 2)
+  (company-show-numbers t)
+  (company-tooltip-align-annotations 't)
+  (global-company-mode t))
+
+#+END_SRC
+
+#+RESULTS:
+
+
 * Python
 
 
@@ -1043,12 +1101,11 @@ elpy use-package configuration was taken from here:
 and [[https://github.com/anschwa/emacs.d]]
 
 
-
-
-
 ** elpy
 
 #+BEGIN_SRC emacs-lisp
+
+  (add-hook 'python-mode-hook 'blacken-mode)
 
   (use-package elpy
     ;; :ensure t
@@ -1095,6 +1152,7 @@ and [[https://github.com/anschwa/emacs.d]]
    (defcustom flycheck-python-pylint-executable
      :safe (lambda (x) t))
 
+
    (defcustom pytest-global-name
      :safe (lambda (x) t))
 
@@ -1103,6 +1161,9 @@ and [[https://github.com/anschwa/emacs.d]]
 
 #+RESULTS:
 : pytest-global-name
+
+
+
 
 
 
@@ -1179,62 +1240,195 @@ available on melpa this morning:
         (add-to-list 'company-backends 'company-tern)
         (add-hook 'js2-mode-hook (lambda ()
                                  (tern-mode)
+                                 (prettier-js-mode)
                                  (company-mode)))
 
 
   )
-
-
-
 
       (require 'js2-refactor)
       ;;(require 'xref-js2)
 
       (add-hook 'js2-mode-hook #'js2-refactor-mode)
       (js2r-add-keybindings-with-prefix "C-c C-r")
-      (define-key js2-mode-map (kbd "C-k") #'js2r-kill)
+      ;;(define-key js2-mode-map (kbd "C-k") #'js2r-kill)
 
       ;; js-mode (which js2 is based on) binds "M-." which conflicts with xref, so
       ;; unbind it.
       (define-key js-mode-map (kbd "M-.") nil)
 
 
-      ;; Tide - Typescript mode
+ ;; Tide - Typescript mode
 
-      (require 'typescript-mode)
-      (add-to-list 'auto-mode-alist '("\\.ts\\'" . typescript-mode))
-
-
-      (defun setup-tide-mode ()
-        (interactive)
-        (tide-setup)
-        (flycheck-mode +1)
-        (setq flycheck-check-syntax-automatically '(save mode-enabled))
-        (eldoc-mode +1)
-        (tide-hl-identifier-mode +1)
-        ;; company is an optional dependency. You have to
-        ;; install it separately via package-install
-        ;; `M-x package-install [ret] company`
-        (company-mode +1))
-
-      ;; aligns annotation to the right hand side
-      (setq company-tooltip-align-annotations t)
-
-      ;; formats the buffer before saving
-      (add-hook 'before-save-hook 'tide-format-before-save)
-
-      (add-hook 'typescript-mode-hook #'setup-tide-mode)
+ (require 'typescript-mode)
+ (add-to-list 'auto-mode-alist '("\\.ts\\'" . typescript-mode))
 
 
+ (defun setup-tide-mode ()
+   (interactive)
+   (tide-setup)
+   (flycheck-mode +1)
+   (setq flycheck-check-syntax-automatically '(save mode-enabled))
+   (eldoc-mode +1)
+   (tide-hl-identifier-mode +1)
+   ;; company is an optional dependency. You have to
+   ;; install it separately via package-install
+   ;; `M-x package-install [ret] company`
+   (company-mode +1))
+
+ ;; aligns annotation to the right hand side
+ (setq company-tooltip-align-annotations t)
+
+ ;; formats the buffer before saving
+ (add-hook 'before-save-hook 'tide-format-before-save)
+
+ (add-hook 'typescript-mode-hook #'setup-tide-mode)
+
+
+;;(use-package tide
+;;  :ensure t
+;;  :after (typescript-mode company flycheck)
+;;  :hook ((typescript-mode . tide-setup)
+;;         (typescript-mode . tide-hl-identifier-mode)
+;;         (before-save . tide-format-before-save)))
 
 
 #+END_SRC
 
 #+RESULTS:
-| setup-tide-mode |
+| tide-hl-identifier-mode | tide-setup | prettier-js-mode | setup-tide-mode |
 
-	
-	
+
+** COMMENT Prettier JS
+
+
+#+BEGIN_SRC emacs-lisp
+
+    (use-package prettier-js
+      :config
+
+      (defun enable-minor-mode (my-pair)
+        "Enable minor mode if filename match the regexp.  MY-PAIR is a cons cell (regexp . minor-mode)."
+        (if (buffer-file-name)
+            (if (string-match (car my-pair) buffer-file-name)
+                (funcall (cdr my-pair)))))
+
+      (add-hook 'js2-mode-hook 'prettier-js-mode)
+      (add-hook 'web-mode-hook '(lambda ()
+                                   (enable-minor-mode
+                                    '("\\.jsx?\\'" . prettier-js-mode))))
+
+  ;; from
+  ;; https://gist.github.com/CodyReichert/9dbc8bd2a104780b64891d8736682cea
+  ;; get webmode and prettier to use local/proejct prettier config (.prettierrc) so
+  ;; they aren't compmeting with each other.
+  (defun web-mode-init-prettier-hook ()
+    (add-node-modules-path)
+    (prettier-js-mode)
+    (js2-minor-mode)
+    (emmet-mode))
+
+  (add-hook 'web-mode-hook  'web-mode-init-prettier-hook)
+
+
+
+      )
+
+#+END_SRC
+
+#+RESULTS:
+: t
+
+
+** React Jsx
+
+#+BEGIN_SRC emacs-lisp
+
+
+;;  (use-package rjsx-mode
+;;    :ensure t
+;;    :mode ("components\\/.*\\.js\\'" . rjsx-mode)
+;;
+;;    :config
+;;    (require 'react-snippets)
+;;
+;;    )
+
+
+
+(defun setup-tide-mode ()
+  (interactive)
+  (tide-setup)
+  (flycheck-mode +1)
+  (setq flycheck-check-syntax-automatically '(save mode-enabled))
+  (eldoc-mode +1)
+  (tide-hl-identifier-mode +1)
+  ;; company is an optional dependency. You have to
+  ;; install it separately via package-install
+  ;; `M-x package-install [ret] company`
+  (company-mode +1))
+
+;; aligns annotation to the right hand side
+(setq company-tooltip-align-annotations t)
+
+;; formats the buffer before saving
+;;(add-hook 'before-save-hook 'tide-format-before-save)
+
+(add-hook 'typescript-mode-hook #'setup-tide-mode)
+(add-hook 'typescript-mode-hook 'prettier-js-mode)
+
+
+
+(use-package tide
+  :ensure t
+  :after (typescript-mode company flycheck)
+  :hook ((typescript-mode . tide-setup)
+         (typescript-mode . tide-hl-identifier-mode)
+         ;;(before-save . tide-format-before-save)
+ )
+)
+
+;;(eval-after-load "tide"
+;;  '(define-key tide-mode-map [F1] 'tide-documentation-at-point))
+
+
+
+;; from tide homepage - use tide in  tsx and jsx files
+(require 'web-mode)
+(add-to-list 'auto-mode-alist '("\\.tsx\\'" . web-mode))
+(add-hook 'web-mode-hook
+          (lambda ()
+            (when (string-equal "tsx" (file-name-extension buffer-file-name))
+              (setup-tide-mode))))
+;; enable typescript-tslint checker
+(flycheck-add-mode 'typescript-tslint 'web-mode)
+
+
+(require 'web-mode)
+(add-to-list 'auto-mode-alist '("\\.jsx\\'" . web-mode))
+(add-hook 'web-mode-hook
+          (lambda ()
+          (prettier-js-mode)
+            (when (string-equal "jsx" (file-name-extension buffer-file-name))
+            (setq emmet-expand-jsx-className? t) ;; default nil
+            (web-mode-set-content-type "jsx")
+              (setup-tide-mode))
+
+
+))
+
+
+;; configure jsx-tide checker to run after your default jsx checker
+(setq-default flycheck-disabled-checkers (append flycheck-disabled-checkers '(tsx-tide)))
+(flycheck-add-mode 'javascript-eslint 'web-mode)
+;;(flycheck-add-next-checker 'javascript-eslint 'jsx-tide 'append)
+
+#+END_SRC
+
+#+RESULTS:
+| web-mode | web-mode | js-mode | js-jsx-mode | js2-mode | js2-jsx-mode | js3-mode | rjsx-mode | typescript-mode |
+
+
 * HTML and Web-mode
 
 Web-mode configuration modified using suggestions found here:
@@ -1250,12 +1444,18 @@ Web-mode configuration modified using suggestions found here:
     (add-hook 'sgml-mode-hook 'emmet-mode) ;; Auto-start on any markup modes
     (add-hook 'web-mode-hook 'emmet-mode) ;; Auto-start on any markup modes
     (add-hook 'css-mode-hook  'emmet-mode) ;; enable Emmet's css abbreviation.
+
+    ;;(setq emmet-expand-jsx-className? t)
+
     )
 
   (use-package web-mode
     ;; :ensure t
+    :mode ("\\.html?\\'"
+    ;; "/\\(components\\|containers\\|src\\)/.*\\.js[x]?\\'"
+    )
     :config
-    (add-to-list 'auto-mode-alist '("\\.html?\\'" . web-mode))
+
     (setq web-mode-engines-alist
           '(("django"    . "\\.html\\'")))
     (setq web-mode-ac-sources-alist
@@ -1269,12 +1469,20 @@ Web-mode configuration modified using suggestions found here:
     (setq web-mode-enable-current-element-highlight t)
     (setq web-mode-enable-current-column-highlight t)
 
+
+
+
+    ;; ( setq web-mode-content-types-alist
+    ;;        '(("jsx" . "/\\(components\\|containers\\|src\\)/.*\\.js[x]?\\'")))
+
     )
+
+
 
 #+END_SRC
 
 #+RESULTS:
-: t
+: ((\.odc\' . archive-mode) (\.odf\' . archive-mode) (\.odi\' . archive-mode) (\.otp\' . archive-mode) (\.odp\' . archive-mode) (\.otg\' . archive-mode) (\.odg\' . archive-mode) (\.ots\' . archive-mode) (\.ods\' . archive-mode) (\.odm\' . archive-mode) (\.ott\' . archive-mode) (\.odt\' . archive-mode) (.md . markdown-mode) (.markdown . markdown-mode) (.text . markdown-mode) (README\.md\' . gfm-mode) (\.html?\' . web-mode) (\.jsx\' . web-mode) (\.js$ . js2-mode) (\.ado\' . ess-stata-mode) (\.do\' . ess-stata-mode) (\.[Ss][Aa][Ss]\' . SAS-mode) (\.Sout . S-transcript-mode) (\.[Ss]t\' . S-transcript-mode) (\.Rd\' . Rd-mode) (DESCRIPTION$ . conf-colon-mode) (/Makevars\(\.win\)?$ . makefile-mode) (\.[Rr]out . ess-r-transcript-mode) (CITATION\' . ess-r-mode) (NAMESPACE\' . ess-r-mode) (\.[rR]profile\' . ess-r-mode) (\.[rR]\' . ess-r-mode) (/R/.*\.q\' . ess-r-mode) (\.[Jj][Aa][Gg]\' . ess-jags-mode) (\.[Bb][Mm][Dd]\' . ess-bugs-mode) (\.[Bb][Oo][Gg]\' . ess-bugs-mode) (\.[Bb][Uu][Gg]\' . ess-bugs-mode) (\.js$ . js3-mode) (\.jl\' . julia-mode) (/git-rebase-todo\' . git-rebase-mode) (\.md$ . poly-markdown-mode) (\.md\' . markdown-mode) (\.markdown\' . markdown-mode) (\.jsx\' . rjsx-mode) (\.ts$ . typescript-mode) (\.gpg\(~\|\.~[0-9]+~\)?\' nil epa-file) (\.elc\' . elisp-byte-code-mode) (\.zst\' nil jka-compr) (\.dz\' nil jka-compr) (\.xz\' nil jka-compr) (\.lzma\' nil jka-compr) (\.lz\' nil jka-compr) (\.g?z\' nil jka-compr) (\.bz2\' nil jka-compr) (\.Z\' nil jka-compr) (\.vr[hi]?\' . vera-mode) (\(?:\.\(?:rbw?\|ru\|rake\|thor\|jbuilder\|rabl\|gemspec\|podspec\)\|/\(?:Gem\|Rake\|Cap\|Thor\|Puppet\|Berks\|Vagrant\|Guard\|Pod\)file\)\' . ruby-mode) (\.re?st\' . rst-mode) (\.py[iw]?\' . python-mode) (\.less\' . less-css-mode) (\.scss\' . scss-mode) (\.awk\' . awk-mode) (\.\(u?lpc\|pike\|pmod\(\.in\)?\)\' . pike-mode) (\.idl\' . idl-mode) (\.java\' . java-mode) (\.m\' . objc-mode) (\.ii\' . c++-mode) (\.i\' . c-mode) (\.lex\' . c-mode) (\.y\(acc\)?\' . c-mode) (\.h\' . c-or-c++-mode) (\.c\' . c-mode) (\.\(CC?\|HH?\)\' . c++-mode) (\.[ch]\(pp\|xx\|\+\+\)\' . c++-mode) (\.\(cc\|hh\)\' . c++-mode) (\.\(bat\|cmd\)\' . bat-mode) (\.[sx]?html?\(\.[a-zA-Z_]+\)?\' . mhtml-mode) (\.svgz?\' . image-mode) (\.svgz?\' . xml-mode) (\.x[bp]m\' . image-mode) (\.x[bp]m\' . c-mode) (\.p[bpgn]m\' . image-mode) (\.tiff?\' . image-mode) (\.gif\' . image-mode) (\.png\' . image-mode) (\.jpe?g\' . image-mode) (\.te?xt\' . text-mode) (\.[tT]e[xX]\' . tex-mode) (\.ins\' . tex-mode) (\.ltx\' . latex-mode) (\.dtx\' . doctex-mode) (\.org\' . org-mode) (\.el\' . emacs-lisp-mode) (Project\.ede\' . emacs-lisp-mode) (\.\(scm\|stk\|ss\|sch\)\' . scheme-mode) (\.l\' . lisp-mode) (\.li?sp\' . lisp-mode) (\.[fF]\' . fortran-mode) (\.for\' . fortran-mode) (\.p\' . pascal-mode) (\.pas\' . pascal-mode) (\.\(dpr\|DPR\)\' . delphi-mode) (\.ad[abs]\' . ada-mode) (\.ad[bs].dg\' . ada-mode) (\.\([pP]\([Llm]\|erl\|od\)\|al\)\' . perl-mode) (Imakefile\' . makefile-imake-mode) (Makeppfile\(?:\.mk\)?\' . makefile-makepp-mode) (\.makepp\' . makefile-makepp-mode) (\.mk\' . makefile-gmake-mode) (\.make\' . makefile-gmake-mode) ([Mm]akefile\' . makefile-gmake-mode) (\.am\' . makefile-automake-mode) (\.texinfo\' . texinfo-mode) (\.te?xi\' . texinfo-mode) (\.[sS]\' . asm-mode) (\.asm\' . asm-mode) (\.css\' . css-mode) (\.mixal\' . mixal-mode) (\.gcov\' . compilation-mode) (/\.[a-z0-9-]*gdbinit . gdb-script-mode) (-gdb\.gdb . gdb-script-mode) ([cC]hange\.?[lL]og?\' . change-log-mode) ([cC]hange[lL]og[-.][0-9]+\' . change-log-mode) (\$CHANGE_LOG\$\.TXT . change-log-mode) (\.scm\.[0-9]*\' . scheme-mode) (\.[ckz]?sh\'\|\.shar\'\|/\.z?profile\' . sh-mode) (\.bash\' . sh-mode) (\(/\|\`\)\.\(bash_\(profile\|history\|log\(in\|out\)\)\|z?log\(in\|out\)\)\' . sh-mode) (\(/\|\`\)\.\(shrc\|zshrc\|m?kshrc\|bashrc\|t?cshrc\|esrc\)\' . sh-mode) (\(/\|\`\)\.\([kz]shenv\|xinitrc\|startxrc\|xsession\)\' . sh-mode) (\.m?spec\' . sh-mode) (\.m[mes]\' . nroff-mode) (\.man\' . nroff-mode) (\.sty\' . latex-mode) (\.cl[so]\' . latex-mode) (\.bbl\' . latex-mode) (\.bib\' . bibtex-mode) (\.bst\' . bibtex-style-mode) (\.sql\' . sql-mode) (\.m[4c]\' . m4-mode) (\.mf\' . metafont-mode) (\.mp\' . metapost-mode) (\.vhdl?\' . vhdl-mode) (\.article\' . text-mode) (\.letter\' . text-mode) (\.i?tcl\' . tcl-mode) (\.exp\' . tcl-mode) (\.itk\' . tcl-mode) (\.icn\' . icon-mode) (\.sim\' . simula-mode) (\.mss\' . scribe-mode) (\.f9[05]\' . f90-mode) (\.f0[38]\' . f90-mode) (\.indent\.pro\' . fundamental-mode) (\.\(pro\|PRO\)\' . idlwave-mode) (\.srt\' . srecode-template-mode) (\.prolog\' . prolog-mode) (\.tar\' . tar-mode) (\.\(arc\|zip\|lzh\|lha\|zoo\|[jew]ar\|xpi\|rar\|cbr\|7z\|ARC\|ZIP\|LZH\|LHA\|ZOO\|[JEW]AR\|XPI\|RAR\|CBR\|7Z\)\' . archive-mode) (\.oxt\' . archive-mode) (\.\(deb\|[oi]pk\)\' . archive-mode) (\`/tmp/Re . text-mode) (/Message[0-9]*\' . text-mode) (\`/tmp/fol/ . text-mode) (\.oak\' . scheme-mode) (\.sgml?\' . sgml-mode) (\.x[ms]l\' . xml-mode) (\.dbk\' . xml-mode) (\.dtd\' . sgml-mode) (\.ds\(ss\)?l\' . dsssl-mode) (\.jsm?\' . javascript-mode) (\.json\' . javascript-mode) (\.jsx\' . js-jsx-mode) (\.[ds]?vh?\' . verilog-mode) (\.by\' . bovine-grammar-mode) (\.wy\' . wisent-grammar-mode) ([:/\]\..*\(emacs\|gnus\|viper\)\' . emacs-lisp-mode) (\`\..*emacs\' . emacs-lisp-mode) ([:/]_emacs\' . emacs-lisp-mode) (/crontab\.X*[0-9]+\' . shell-script-mode) (\.ml\' . lisp-mode) (\.ld[si]?\' . ld-script-mode) (ld\.?script\' . ld-script-mode) (\.xs\' . c-mode) (\.x[abdsru]?[cnw]?\' . ld-script-mode) (\.zone\' . dns-mode) (\.soa\' . dns-mode) (\.asd\' . lisp-mode) (\.\(asn\|mib\|smi\)\' . snmp-mode) (\.\(as\|mi\|sm\)2\' . snmpv2-mode) (\.\(diffs?\|patch\|rej\)\' . diff-mode) (\.\(dif\|pat\)\' . diff-mode) (\.[eE]?[pP][sS]\' . ps-mode) (\.\(?:PDF\|DVI\|OD[FGPST]\|DOCX?\|XLSX?\|PPTX?\|pdf\|djvu\|dvi\|od[fgpst]\|docx?\|xlsx?\|pptx?\)\' . doc-view-mode-maybe) (configure\.\(ac\|in\)\' . autoconf-mode) (\.s\(v\|iv\|ieve\)\' . sieve-mode) (BROWSE\' . ebrowse-tree-mode) (\.ebrowse\' . ebrowse-tree-mode) (#\*mail\* . mail-mode) (\.g\' . antlr-mode) (\.mod\' . m2-mode) (\.ses\' . ses-mode) (\.docbook\' . sgml-mode) (\.com\' . dcl-mode) (/config\.\(?:bat\|log\)\' . fundamental-mode) (\.\(?:[iI][nN][iI]\|[lL][sS][tT]\|[rR][eE][gG]\|[sS][yY][sS]\)\' . conf-mode) (\.la\' . conf-unix-mode) (\.ppd\' . conf-ppd-mode) (java.+\.conf\' . conf-javaprop-mode) (\.properties\(?:\.[a-zA-Z0-9._-]+\)?\' . conf-javaprop-mode) (\.toml\' . conf-toml-mode) (\.desktop\' . conf-desktop-mode) (\`/etc/\(?:DIR_COLORS\|ethers\|.?fstab\|.*hosts\|lesskey\|login\.?de\(?:fs\|vperm\)\|magic\|mtab\|pam\.d/.*\|permissions\(?:\.d/.+\)?\|protocols\|rpc\|services\)\' . conf-space-mode) (\`/etc/\(?:acpid?/.+\|aliases\(?:\.d/.+\)?\|default/.+\|group-?\|hosts\..+\|inittab\|ksysguarddrc\|opera6rc\|passwd-?\|shadow-?\|sysconfig/.+\)\' . conf-mode) ([cC]hange[lL]og[-.][-0-9a-z]+\' . change-log-mode) (/\.?\(?:gitconfig\|gnokiirc\|hgrc\|kde.*rc\|mime\.types\|wgetrc\)\' . conf-mode) (/\.\(?:enigma\|gltron\|gtk\|hxplayer\|net\|neverball\|qt/.+\|realplayer\|scummvm\|sversion\|sylpheed/.+\|xmp\)rc\' . conf-mode) (/\.\(?:gdbtkinit\|grip\|orbital/.+txt\|rhosts\|tuxracer/options\)\' . conf-mode) (/\.?X\(?:default\|resource\|re\)s\> . conf-xdefaults-mode) (/X11.+app-defaults/\|\.ad\' . conf-xdefaults-mode) (/X11.+locale/.+/Compose\' . conf-colon-mode) (/X11.+locale/compose\.dir\' . conf-javaprop-mode) (\.~?[0-9]+\.[0-9][-.0-9]*~?\' nil t) (\.\(?:orig\|in\|[bB][aA][kK]\)\' nil t) ([/.]c\(?:on\)?f\(?:i?g\)?\(?:\.[a-zA-Z0-9._-]+\)?\' . conf-mode-maybe) (\.[1-9]\' . nroff-mode) (\.tgz\' . tar-mode) (\.tbz2?\' . tar-mode) (\.txz\' . tar-mode) (\.tzst\' . tar-mode))
 
 
 * Markdown
