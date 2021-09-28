@@ -1,6 +1,6 @@
 *~
 *.elc
-.python-environments/*
+
 secrets.*
 ReadMe.el
 abbrev_defs
@@ -18,7 +18,13 @@ orig_init.el
 projectile-bookmarks.eld
 projectile.cache
 session*
-session.10f06e7974f80e9f5150186977687597800000018440037
-snippets/*
 transient/*
 
+.lsp-session-v1
+.org-id-locations
+history
+myinit.html
+
+org-roam.db
+recentf
+smex-items
