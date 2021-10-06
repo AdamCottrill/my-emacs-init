@@ -1,0 +1,95 @@
+# -*- mode: snippet -*-
+# key: sweave
+# name: SweaveTemplate
+# --
+\documentclass[12pt,letterpaper]{article}                   % specifies type of document and font size (default size 10)
+
+\usepackage[OT1]{fontenc}
+\usepackage{Sweave}
+%for the references and citations  (see: http://www.andy-roberts.net/misc/latex/latextutorial3.html)
+\usepackage{natbib}			
+\bibpunct{(}{)}{;}{a}{,}{,}
+
+% correct bad hyphenation (how words are split) here
+%\hyphenation{op-ti-cal net-works semi-con-duc-tor}
+
+\usepackage[margin=1.0in]{geometry}             % sets all margins to 1in -- can be changed as desired
+\usepackage{setspace,relsize}                   % for latex(describe()) (Hmisc package)
+%\usepackage{moreverb}                           % for verbatimtabinput -- LaTeX environment
+\usepackage{url}                                % for \url{} command
+\usepackage{amssymb}                            % for many mathematical symbols
+\usepackage[pdftex]{lscape}                     % for landscaped tables
+\usepackage{longtable}                          % for tables that break over multiple pages
+\usepackage{graphicx}
+\usepackage{hyperref}
+\usepackage{ctable}
+
+%formatting options for ctables:
+\setupctable{doinside={\small}}
+
+% Nicer headers and footers
+%
+% \fancyhead[L/C/R]{} to change headers
+% \fancyfoot[L/C/R]{} to change footers
+\usepackage{fancyhdr} 
+\fancyhead[L]{Running Title}  %Running title-1 here
+\fancyhead[R]{UGLMU}          %Running title-2 here
+\renewcommand{\footrulewidth}{0.5pt} % Insert a line above the footers
+\pagestyle{fancy}
+
+% new commands
+\newcommand{\eg}{\textit{e.g. }}
+\newcommand{\ie}{\textit{i.e. }}
+
+<< echo=FALSE, results=hide, fig=FALSE>>=
+figdir <- paste(getwd(),"/figures", sep='')
+@
+%here is where the figurs will be (note the trailing slash!):
+\graphicspath{{\Sexpr{figdir}/}}
+
+%--------------------------------------------------
+\title{Fill in title here}                      % to specify title
+\author{Adam Cottrill}                          % to specify author(s)
+%--------------------------------------------------
+
+\begin{document}  
+% If .nw file contains graphs: To specify that EPS/PDF graph files are to be saved to 'graphics' sub-folder
+%         NOTE: 'graphics' sub-folder must exist prior to Sweave step
+\SweaveOpts{echo=FALSE,results=hide,prefix.string=graphics/figures}
+% If .nw file contains graphs: to modify (shrink/enlarge} size of graphics file inserted
+%         NOTE: can be specified/modified before any graph chunk
+\setkeys{Gin}{width=1.0\textwidth}
+\maketitle                                      % needed to make title
+%\tableofcontents                                % inserts 'Table of contents' (section, sub-section, etc numbers and titles)
+%\listoftables                                   % inserts 'List of Tables' (numbers and captions)
+%\listoffigures                                  % inserts 'List of Figures' (numbers and captions)
+
+%--------------------------------------------------
+
+<<>>=
+       #This function is from Duncan Murdoch - R-help Archives
+       #(http://tolstoy.newcastle.edu.au/R/e4/help/08/07/16966.html)
+       #and will allow formula's to be typeset in LaTeX doc.
+       Fixtilde <- function(x) sub('~','$\\\\\\\\sim$',x)
+       #usage:  \Sexpr{Fixtile("y ~ x1 + x2")}
+@
+
+% Where other LaTeX documentation chunks and R code chunks are placed
+
+
+
+%--------------------------------------------------
+%\bibliographystyle{cjfas}
+%\bibliography{./test}
+%--------------------------------------------------
+%this will produce a footer with system information for future reference
+\makeatletter{\renewcommand*{\@makefnmark}{}
+\footnotetext{
+This document was produced
+    on~\today~using ~\Sexpr{print(version$version.string)}~on a~
+    \Sexpr{print(version$platform)}~platform.}}
+%--------------------------------------------------
+
+\end{document}
+
+

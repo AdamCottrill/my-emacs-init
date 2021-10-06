@@ -1,0 +1,80 @@
+# -*- mode: snippet -*-
+# name: tpl1
+# --
+//=============================================================
+// File: `(buffer-file-name)`
+// Created: `(now)`
+//
+// DESCRIPTION:
+//
+// Model:
+// Parameters:
+// Fitted data:
+// Likelihood:
+// Notes:
+// Warning:
+// History:
+//
+// A. Cottrill
+//=============================================================
+
+
+GLOBALS_SECTION
+  #include <fstream.h>
+  #include <mylib.cpp>
+  std::ofstream clogf("program.log");
+  #define TRACE(obj) clogf << "line " << __LINE__ << ", file " << __FILE__ << ", " << #obj" =\n " << obj << endl << endl;
+  #include "admodel.h"
+  #include "admb2r.cpp" 
+  const double pi = 3.141592654;
+  int mcmc_iteration = 0;
+  std::ofstream mcmc_report("MCMC_Results.txt");
+
+DATA_SECTION
+  init_int n
+  init_vector X(1,n)
+  init_vector Y(1,n)
+  number halfnlog2pi
+
+PARAMETER_SECTION
+  init_number b0
+  init_number b1
+  init_number logsigmaMLE
+  sdreport_number sigmaMLE
+  vector Yfit(1,n)
+  matrix summary(1,n,1,3)  // | X | Y | Yfit |
+  objective_function_value neglogL
+
+PRELIMINARY_CALCS_SECTION
+  halfnlog2pi = 0.5*n*log(2*pi);
+
+PROCEDURE_SECTION
+  Yfit = b0 + b1*X;
+  sigmaMLE = mfexp(logsigmaMLE);
+  neglogL = halfnlog2pi + n*log(sigmaMLE) + norm2(Y-Yfit)/(2*sigmaMLE*sigmaMLE);
+  if(mceval_phase())
+    write_mcmc();
+
+REPORT_SECTION
+  get_summary();
+  report<<"# b0"      <<endl<<b0           <<endl
+        <<"# b1"      <<endl<<b1           <<endl
+        <<"# RSS"     <<endl<<norm2(Y-Yfit)<<endl
+        <<"# sigmaMLE"<<endl<<sigmaMLE     <<endl
+        <<"# neglogL" <<endl<<neglogL<<endl<<endl;
+  report<<"# Model summary"<<endl
+        <<" X Y Yfit"<<endl
+        <<summary<<endl;
+
+  #include "make-Rfile.cxx"  //  for ADMB2R 
+
+FUNCTION get_summary
+  summary.colfill(1,X);
+  summary.colfill(2,Y);
+  summary.colfill(3,Yfit);
+
+FUNCTION write_mcmc
+  mcmc_iteration++;
+  if(mcmc_iteration == 1)
+    mcmc_report<<"neglogL,b0,b1,sigmaMLE"<<endl;
+  mcmc_report<<neglogL<<","<<b0<<","<<b1<<","<<sigmaMLE<<endl;

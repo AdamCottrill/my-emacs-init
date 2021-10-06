@@ -1,0 +1,7 @@
+# -*- mode: snippet -*-
+# name: Rchunk
+# --
+<<label=${1:label}, echo=FALSE, results=hide, fig=FALSE>>=
+#R code here:
+$0
+@

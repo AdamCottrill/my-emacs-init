@@ -1,0 +1,6 @@
+# This was cloned from a TextMate bundle for yasnippet.
+# --
+
+class ${1:MODEL}Admin(admin.ModelAdmin):
+    pass
+admin.site.register($1, $1Admin)

@@ -1,0 +1,34 @@
+# -*- mode: snippet -*-
+# name: Stantemplate
+# --
+#=============================================================
+# `(buffer-file-name)`
+# Created: `(now)`
+#
+# DESCRIPTION:
+#
+#
+#
+# A. Cottrill
+#=============================================================
+
+  data {
+
+  }
+  # transformed parameters {
+  #
+  #}
+  parameters {
+
+  }
+  # transformed parameters {
+  #
+  #}
+  model {
+
+  }
+
+  # generated quantities {
+  #
+  #}
+

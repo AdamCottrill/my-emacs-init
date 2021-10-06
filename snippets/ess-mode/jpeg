@@ -1,0 +1,11 @@
+# -*- mode: snippet -*-
+# name: jpeg
+# --
+
+jpeg(filename = ${1:FileName}, width = 480, height = 480, units = "px", pointsize
+         = 12, quality = 75, bg = "white", res = NA, restoreConsole = TRUE)
+
+$0
+dev.off()
+
+

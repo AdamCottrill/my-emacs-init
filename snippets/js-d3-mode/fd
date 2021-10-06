@@ -1,0 +1,6 @@
+# -*- mode: snippet; require-final-newline: nil -*-
+# name: fd
+# key: fd
+# group: d3
+# --
+function(d) { $1 }

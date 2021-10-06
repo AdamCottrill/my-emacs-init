@@ -1,0 +1,4 @@
+# -*- mode: snippet -*-
+# name: rout
+# --
+  report << "${1:Var}:\t" << $1 << endl;

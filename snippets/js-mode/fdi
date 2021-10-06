@@ -1,0 +1,7 @@
+
+# -*- mode: snippet; require-final-newline: nil -*-
+# name: fdi
+# key: fdi
+# group: d3
+# --
+(d, i) => { $1 }

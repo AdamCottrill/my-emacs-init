@@ -1,0 +1,5 @@
+# -*- mode: snippet -*-
+# name: nllpois
+# --
+
+f += ${1:Lambda} - ${2:x(i)} * log($1) + log(factorail($2));

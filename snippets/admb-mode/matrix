@@ -1,0 +1,5 @@
+# -*- mode: snippet -*-
+# name: matrix
+# --
+
+  matrix ${1:NAME}(${2:1},${3:nobs},${4:1},${5:ncol});

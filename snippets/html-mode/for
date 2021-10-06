@@ -1,0 +1,6 @@
+#contributor : Adam Cottrill
+#name : {% for x in ... %}...{% endfor %}
+# --
+{% for $1 in $2 %}
+  $3
+{% endfor %}

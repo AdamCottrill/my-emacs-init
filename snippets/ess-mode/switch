@@ -1,0 +1,12 @@
+# -*- mode: snippet -*-
+# name: switch
+# --
+
+switch(what,
+        "Match1" = {  #R code for Match1},
+        "Match2" = {  #R code for Match2},
+        "Match3" = {  #R code for Match3},
+        {
+        #R code for no matches.
+        }
+  )

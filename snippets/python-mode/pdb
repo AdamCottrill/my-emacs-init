@@ -1,0 +1,9 @@
+# -*- coding: utf-8 -*-
+# key: wtf
+# name: write.wtf
+# contributor: Adam Cottrill
+
+# --
+fname = '/home/adam/Documents/sandbox/wtf.html'
+with open(fname, 'bw') as f:
+    f.write(response.content)

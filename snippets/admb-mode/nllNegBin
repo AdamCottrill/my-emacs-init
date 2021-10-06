@@ -1,0 +1,7 @@
+# -*- mode: snippet -*-
+# name: nllNegBin
+# --
+
+
+  // mu - mean, k - dispersion, x(i) - the ith response/observation
+  f += -gammln(${1:x(i)} + ${2:k}) + gammln($2) + gammln($1 +1) - $2 * log($2 /(${3:mu} + $2)) - $1*log($3 / ($3 + $2)); 

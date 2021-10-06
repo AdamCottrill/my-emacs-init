@@ -1,0 +1,10 @@
+# -*- mode: snippet -*-
+# name :forij
+# --
+  for (i=fyear; i<=lyear; i++)
+  {
+    for (j=fage; j<=lage; j++)
+    {
+      $0
+    }
+  }

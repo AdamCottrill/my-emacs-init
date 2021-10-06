@@ -1,0 +1,15 @@
+#name : (orgbeamer2col)
+# --
+
+** ${1:<PageTitle>}                                     :BMCOL:B_ignoreheading:
+    :PROPERTIES:
+    :BEAMER_env: ignoreheading
+    :BEAMER_col: 0.6
+    :END:
+$0
+** Figure                                    :BMCOL:B_figure:
+    :PROPERTIES:
+    :BEAMER_col: 0.4
+    :BEAMER_env: figure
+    :END:
+#+latex:\includegraphics[width=\textwidth]{${2:<figurename>}}

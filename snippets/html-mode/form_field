@@ -1,0 +1,12 @@
+#contributor : Adam Cottrill
+#name : form_field
+# --
+<div class="form-group {% if form.$1.errors %}has-error{% endif %}">
+    {{ form.$1.label_tag }}
+    {{ form.$1 }}
+    {% if form.$1.errors %}
+    {% for error in form.$1.errors %}
+    <div class="has-error help-block text-danger">{{ error }}</div>
+    {% endfor %}
+    {% endif %}
+</div>

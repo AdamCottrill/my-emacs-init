@@ -1,0 +1,17 @@
+# -*- mode: snippet -*-
+# name: rfig
+# --
+
+<<label=${1:label},echo=false,results=hide>>=
+file.name <- paste(fig.dir,"$1.pdf", sep="")
+pdf(file=file.name,width=${2:5},height=${3:5})
+#R plotting code here
+$0
+dev.off()
+@
+\begin{figure}
+\centering
+\includegraphics[width=$2in,height=$3in]{$1.pdf}
+\caption{${4:CAPTION}.}
+\label{fig:$1}
+\end{figure}

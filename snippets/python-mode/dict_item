@@ -1,0 +1,7 @@
+# -*- coding: utf-8 -*-
+# key: '':
+# name: dict_item
+# contributor: Adam Cottrill
+
+# --
+'${1:Var}':$1

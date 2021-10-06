@@ -1,0 +1,9 @@
+# -*- mode: snippet -*-
+# name: png
+# --
+
+png(filename = ${1:FileName}, width = 480, height = 480, units = "px", pointsize
+         = 12, bg = "white", res = NA, restoreConsole = TRUE)
+
+$0
+dev.off()

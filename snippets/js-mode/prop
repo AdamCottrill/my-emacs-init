@@ -1,0 +1,6 @@
+# -*- mode: snippet; require-final-newline: nil -*-
+# name: ''
+# key: ''
+# group: d3
+# --
+'$1': $1,$0

@@ -1,0 +1,4 @@
+# -*- mode: snippet -*-
+# name: nlllognorm
+# --
+f += sum(log(${1:x})) + ${2:nobs} * (0.5 * log(2 * 3.14159265) + log(${3:sigma})) + 0.5 * (1 / square($3)) * norm2(log($1) - ${4:mu});

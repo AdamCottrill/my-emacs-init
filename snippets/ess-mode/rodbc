@@ -1,0 +1,13 @@
+# -*- mode: snippet -*-
+# name: rodbc
+# --
+dbase <- '${1:C:/1work/databases/IA_Offshore_Master.mdb}'
+query <- '${2}'
+DBConnection <- odbcConnectAccess(dbase,uid = "", pwd = "")
+    $>${3:DF} <- sqlFetch(DBConnection, query, colnames=FALSE, rownames=FALSE)
+    head($3)
+    str($3)
+    nrow($3)
+odbcClose(DBConnection)            
+
+${0}

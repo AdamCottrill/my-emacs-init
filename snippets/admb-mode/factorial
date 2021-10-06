@@ -1,0 +1,17 @@
+# -*- mode: snippet -*-
+# name: factorial
+# --
+
+
+FUNCTION double factorial(double n)
+  double fact;  //declare local variable (c++ double=ADMB number)
+  int k;  	//declare local variable
+  fact=1.0;
+  if(n!=0.0)  	//if n not equal to zero
+  {
+    for (k=1;k<=n;k++)
+    {
+      fact*=k;
+    }
+  }
+  return(fact);

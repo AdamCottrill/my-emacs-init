@@ -1,0 +1,15 @@
+# -*- coding: utf-8 -*-
+# name: testcase
+# contributor: Adam Cottrill
+
+# --
+class ${‹1›:‹TestSomething›}(TestCase):
+
+    def setUp(self):
+        $0pass
+    
+    def test_first_test(self):
+        pass
+
+    def tearDown(self):
+        pass

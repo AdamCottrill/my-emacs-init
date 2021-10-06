@@ -1,0 +1,5 @@
+# -*- mode: snippet -*-
+# name: install.cran
+# --
+
+install.packages("${0}", repos="http://cran.r-project.org", destdir="c:/1work/R/packages")

@@ -1,0 +1,6 @@
+# -*- mode: snippet; require-final-newline: nil -*-
+# name: .attr
+# key: .attr
+# group: d3
+# --
+.attr( "$1", $2 )

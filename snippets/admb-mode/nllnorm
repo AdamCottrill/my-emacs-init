@@ -1,0 +1,4 @@
+# -*- mode: snippet -*-
+# name: nllnorm
+# --
+f +=  ${1:n} * log(${2:SD} * square(2 * 3.14159265)) + 0.5 * (1 / square($2)) * norm2(${3:OBS} - ${4:EST});

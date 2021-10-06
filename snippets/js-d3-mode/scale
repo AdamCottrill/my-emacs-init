@@ -1,0 +1,8 @@
+# -*- mode: snippet; require-final-newline: nil -*-
+# name: scale
+# key: scale
+# group: d3
+# --
+scale.$1()
+  .domain( $2 )
+  .range( $3 )

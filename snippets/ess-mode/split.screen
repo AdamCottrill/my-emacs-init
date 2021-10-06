@@ -1,0 +1,13 @@
+# -*- mode: snippet -*-
+# name: split.screen
+# --
+
+#two panels side by side
+split.screen(c(1,2))
+screen(1)
+#code for first pannel here:
+
+screen(2)
+#code for second panel here:
+
+close.screen(all=TRUE)

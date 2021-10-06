@@ -1,0 +1,26 @@
+# -*- mode: snippet -*-
+# name: Rtemplate
+# --
+#=============================================================
+# `(buffer-file-name)`
+# Created: `(now)`
+#
+# DESCRIPTION:
+#
+#
+#
+# A. Cottrill
+#=============================================================
+
+# LIBRARIES:
+library(RODBC)
+library(reshape2)
+library(ggplot2)
+
+# OTHER SCRIPTS:
+#source("")
+
+#=============================================================
+
+rodbc
+

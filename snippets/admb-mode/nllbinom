@@ -1,0 +1,6 @@
+# -*- mode: snippet -*-
+# name: nllbinom
+# --
+
+// requries functions 'choose' and 'factorial'
+f += -(log(choose(${1:n},${2:x})) + $2 * log(${3:p}) + ($1 - $2) * log(1 - $3));

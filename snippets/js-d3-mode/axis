@@ -1,0 +1,8 @@
+# -*- mode: snippet; require-final-newline: nil -*-
+# name: axis
+# key: axis
+# group: d3
+# --
+svg.axis()
+  .orient( $1 )
+  .scale( $2 )

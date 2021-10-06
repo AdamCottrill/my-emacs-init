@@ -1,0 +1,38 @@
+# -*- mode: snippet -*-
+# name: tpl2
+# --
+//=============================================================
+// File: `(buffer-file-name)`
+// Created: `(now)`
+//
+// DESCRIPTION:
+//
+//
+// A. Cottrill
+//=============================================================
+
+DATA_SECTION
+  init_int n
+  init_vector X(1,n)
+  init_vector Y(1,n)
+
+PARAMETER_SECTION
+  init_number b0
+  init_number b1
+  vector Yfit(1,n)
+  objective_function_value RSS
+
+PROCEDURE_SECTION
+  Yfit = b0 + b1*X;
+  RSS = norm2(Y-Yfit);
+
+REPORT_SECTION
+  #include "make-Rfile.cxx" 
+
+GLOBALS_SECTION
+  #include <fstream.h>
+  #include <mylib.cpp>
+  ofstream clogf("program.log");
+  #define TRACE(obj) clogf << "line " << __LINE__ << ", file " << __FILE__ << ", " << #obj" =\n " << obj << endl << endl;
+  #include <admodel.h>
+  #include <admb2r.cpp>

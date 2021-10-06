@@ -1,0 +1,8 @@
+# -*- mode: snippet; require-final-newline: nil -*-
+# name: nest
+# key: nest
+# group: d3
+# --
+nest()
+  .key( $1 )
+  .entries( $2 )
